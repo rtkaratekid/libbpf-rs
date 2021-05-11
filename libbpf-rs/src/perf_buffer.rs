@@ -123,22 +123,6 @@ impl<'a, T> PerfBufferBuilder<'a, T> {
             ctx: self.ctx,
         }));
 
-         /*
-        let callback_struct_ptr = if self.ctxj
-
-        let callback_struct_ptr = Box::into_raw(Box::new(CbStruct {
-            sample_cb: self.sample_cb,
-            lost_cb: self.lost_cb,
-        }));
-
-        let c_ctx: *mut std::ffi::c_void; // = std::ptr::null_mut();
-        if let Some(context) = self.ctx {
-            c_ctx = context;
-        } else {
-            c_ctx = callback_struct_ptr as *mut _;
-        }
-        */
-
         let opts = libbpf_sys::perf_buffer_opts {
             sample_cb: c_sample_cb,
             lost_cb: c_lost_cb,
