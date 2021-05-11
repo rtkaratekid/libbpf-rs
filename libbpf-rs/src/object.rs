@@ -371,6 +371,20 @@ impl Object {
         Self::new(ptr)
     }
 
+    pub fn name(&self) -> Result<&str> {
+        unsafe {
+            let ptr = libbpf_sys::bpf_object__name(self.ptr);
+            let err = libbpf_sys::libbpf_get_error(ptr as *const _);
+            if err != 0 {
+                return Err(Error::System(err as i32));
+            }
+
+            CStr::from_ptr(ptr)
+                .to_str()
+                .map_err(|e| Error::Internal(e.to_string()))
+        }
+    }
+
     pub fn map<T: AsRef<str>>(&mut self, name: T) -> Result<Option<&mut Map>> {
         if self.maps.contains_key(name.as_ref()) {
             Ok(self.maps.get_mut(name.as_ref()))
